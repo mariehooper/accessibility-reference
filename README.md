@@ -1,6 +1,16 @@
 # accessibility-reference
 Reference Guide for Making Web Applications More Accessible
 
+## Common Accessibility Patterns
+Accessibility best practices that apply to web apps in general also apply to Angular.
+- **Text alternatives:** Add alternate text content to make visual information accessible using [these W3C guidelines](https://www.w3.org/TR/html-alt-techniques/). The appropriate technique depends on the specific markup but can be accomplished using offscreen spans, `aria-label` or label elements, image `alt` attributes, `figure/figcaption` elements and more.
+- **HTML Semantics:** If you're creating custom element directives, Web Components or HTML in general, use native elements wherever possible to utilize built-in events and properties. Alternatively, use ARIA to communicate semantic meaning. [See notes on ARIA use](https://www.w3.org/TR/aria-in-html/#notes-on-aria-use-in-html).
+- **Focus management:** Guide the user around the app as views are appended/removed. Focus should never be lost, as this causes unexpected behavior and much confusion (referred to as "freak-out mode").
+- **Announcing changes:** When filtering or other UI messaging happens away from the user's focus, notify with [ARIA Live Regions](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions).
+- **Color contrast and scale:** Make sure content is legible and interactive controls are usable at all screen sizes. Consider configurable UI themes for people with color blindness, low vision or other visual impairments.
+- **Progressive enhancement:** Some users do not browse with JavaScript enabled or do not have the latest browser. An accessible message about site requirements can inform users and improve the experience.
+
+
 ## Semantic Structure
 - Web developer extension for Firefox shows document outline (Web developer > Information > view document outline)
 - Rule of thumb for H1 - only one per page and should be most important info for page
