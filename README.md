@@ -1,8 +1,7 @@
 # accessibility-reference
 Reference Guide for Making Web Applications More Accessible
 
-Table of Contents
-
+## Table of Contents
 - [Common Accessibility Patterns](#common-accessibility-patterns)
 - [Semantic Structure](#semantic-structure)
 - [Buttons vs. Links](#buttons-vs-links)
@@ -142,9 +141,19 @@ $('ul.tabs li').keydown(function(e) {
 
 ### Forms
 #### Labels
-[MDN Label Reference Article](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label)
-- Implicit labeling: wrapping input and text up together in label element
-- Using ‘for’ attribute: If these need to be separate stylistically, you can use `<label for=”element-id”>Label</label>` and give the `input` an ID that matches i.e. “element-id”
+[MDN Label Reference Article](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) <br>
+[W3C Form Tutorial](https://www.w3.org/WAI/tutorials/forms/labels/)
+
+##### There are two ways to label form controls:
+- **Implicit labeling**: wrapping input and text up together inside label element
+```HTML
+<label>Username<input type="text"></label>
+```
+- **Explicit Labeling**: If these need to be separate stylistically, you can use the for attribute as long as it matches the ID of the form control.
+```HTML
+<label for="username">Username</label>
+<input type="text" id="username">
+```
 
 #### Errors
 [Using Aria-Invalid to Indicate an Error Field](https://www.w3.org/WAI/GL/wiki/Using_Aria-Invalid_to_Indicate_An_Error_Field)
@@ -181,3 +190,14 @@ How to implement these:
 - Chrome://accessibility - shows all open tabs and can toggle accessibility tree on
 
 ## Resources for Learning More
+### Videos
+- [Start Building Accessible Web Applications Today](https://egghead.io/courses/start-building-accessible-web-applications-today)
+- [A Beginner's Guide to Web Accessibility](https://webdesign.tutsplus.com/courses/a-beginners-guide-to-web-accessibility)
+- [Google's Introduction to Web Accessibility](https://webaccessibility.withgoogle.com/course)
+
+### Books
+- [Inclusive Design Patterns by Heydon Pickering](https://www.smashingmagazine.com/inclusive-design-patterns/)
+
+### Websites
+- [WebAIM](http://webaim.org/intro/)
+- [Web Accessibility Resources from Marcy Sutton](https://marcysutton.com/web-accessibility-resources/)
