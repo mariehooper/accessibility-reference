@@ -8,8 +8,8 @@ Table of Contents
 - [Buttons vs. Links](#buttons-vs-links)
 - [ARIA](#aria)
 - [Practical Examples](#practical-examples)
-  - [Accordions](#Accordions)
-  - [Tab Panels](#Tab-panels)
+  - [Accordions](#accordions)
+  - [Tab Panels](#tab-panels)
   - [Forms](#forms)
   - [Focus Management](#focus-management)
   - [Adding Skip Links](#adding-skip-links)
@@ -58,7 +58,7 @@ Widget roles - use these
 ### Tab Panels
 [WAI-ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel)
 
-Summary of requirements for tab panels:
+#### Summary of requirements for tab panels:
 - The element that serves as the container for the set of tabs has role `tablist`.
 - Each element that serves as a tab has role `tab` and is contained within the element with role `tablist`.
 - Each element that contains the content panel for a tab has role `tabpanel`.
@@ -68,13 +68,13 @@ Summary of requirements for tab panels:
 - If a tab element has a pop-up menu, it has the property `aria-haspopup` set to true.
 - If the `tablist` element is vertically oriented, it has the property aria-orientation set to vertical. The default value of aria-orientation for a `tablist` element is horizontal.
 
-#### Example HTML
-```
+##### Example HTML
+```html
 <div class="tabpanel">
   <ul class="tabs" role="tablist">
-    <li class="tab selected" id="tab1" role="tab" aria-controls="tabpanel1" aria-selected="true">Tab 1</li>
-    <li class="tab" id="tab2" role="tab" aria-controls="tabpanel2" aria-selected="false">Tab 2</li>
-    <li class="tab" id="tab3" role="tab" aria-controls="tabpanel3" aria-selected="false">Tab 3</li>
+    <li class="tab selected" id="tab1" role="tab" aria-controls="tabpanel1" aria-selected="true" tabindex="0">Tab 1</li>
+    <li class="tab" id="tab2" role="tab" aria-controls="tabpanel2" aria-selected="false" tabindex="-1">Tab 2</li>
+    <li class="tab" id="tab3" role="tab" aria-controls="tabpanel3" aria-selected="false" tabindex="-1">Tab 3</li>
   </ul>
   <div class="tabpanel selected" id="tabpanel1" aria-labelledby="tab1" aria-hidden="false">
     <p>Content</p>
@@ -87,7 +87,7 @@ Summary of requirements for tab panels:
   </div>
 </div>
 ```
-#### Example jQuery
+##### Example jQuery
 ```javascript
 function showSelectedTab($tab) {
   var tabPanelId = '#' + $tab.attr('aria-controls');
@@ -113,7 +113,7 @@ When focus is on a tab element in a horizontal tab list:
 - **Left Arrow**: moves focus to the previous tab. If focus is on the first tab, moves focus to the last tab. Optionally, activates the newly focused tab (See note below).
 - **Right Arrow**: Moves focus to the next tab. If focus is on the last tab element, moves focus to the first tab. Optionally, activates the newly focused tab (See note below).
 
-Example jQuery
+##### Example jQuery
 ```javaScript
 $('ul.tabs li').keydown(function(e) {
   var $tab = $(this);
