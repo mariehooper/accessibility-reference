@@ -8,6 +8,8 @@ Table of Contents
 - [Buttons vs. Links](#buttons-vs-links)
 - [ARIA](#aria)
 - [Practical Examples](#practical-examples)
+  - [Accordions](#Accordions)
+  - [Tab Panels](#Tab-panels)
   - [Forms](#forms)
   - [Focus Management](#focus-management)
   - [Adding Skip Links](#adding-skip-links)
@@ -49,6 +51,94 @@ Widget roles - use these
 - Use the native HTML tags first since they provide a lot of the features needed for screen reader usage without extra work- ARIA is a fallback/addition
 
 ## Practical Examples
+
+### Accordions
+
+
+### Tab Panels
+[WAI-ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel)
+
+Summary of requirements for tab panels:
+- The element that serves as the container for the set of tabs has role `tablist`.
+- Each element that serves as a tab has role `tab` and is contained within the element with role `tablist`.
+- Each element that contains the content panel for a tab has role `tabpanel`.
+- Each element with role `tab` has the property aria-controls referring to its associated `tabpanel` element.
+- The active tab element has the state aria-selected set to true and all other tab elements have it set to false.
+- Each element with role `tabpanel` has the property `aria-labelledby` referring to its associated tab element.
+- If a tab element has a pop-up menu, it has the property `aria-haspopup` set to true.
+- If the `tablist` element is vertically oriented, it has the property aria-orientation set to vertical. The default value of aria-orientation for a `tablist` element is horizontal.
+
+#### Example HTML
+```
+<div class="tabpanel">
+  <ul class="tabs selected" role="tablist">
+    <li class="tab" id="tab1" role="tab" aria-controls="tabpanel1" aria-selected="true">Tab 1</li>
+    <li class="tab" id="tab2" role="tab" aria-controls="tabpanel2" aria-selected="false">Tab 2</li>
+    <li class="tab" id="tab3" role="tab" aria-controls="tabpanel3" aria-selected="false">Tab 3</li>
+  </ul>
+  <div class="tabpanel" id="tabpanel1" aria-labelledby="tab1" aria-hidden="false">
+    <p>Content</p>
+  </div>
+  <div class="tabpanel" id="tabpanel2" aria-labelledby="tab2" aria-hidden="true">
+    <p>Content</p>
+  </div>
+  <div class="tabpanel" id="tabpanel3" aria-labelledby="tab3" aria-hidden="true">
+    <p>Content</p>
+  </div>
+</div>
+```
+#### Example jQuery
+```javascript
+function showSelectedTab($tab) {
+  var tabPanelId = '#' + $tab.attr('aria-controls');
+  var $tabPanel = $(tabPanelId);
+
+    // remove selected class from all tabs and assoc. tab panel other than clicked
+    $tab.siblings().removeClass('selected').attr('aria-selected', 'false').attr('tabindex', '-1');
+    $tabPanel.siblings().removeClass('selected').attr('aria-hidden', 'true');
+    // add selected class on clicked tab and associated tab panel
+    $tab.addClass('selected').attr('aria-selected', 'true').attr('tabindex', '0');
+    $tabPanel.addClass('selected').attr('aria-hidden', 'false');
+}
+
+$('ul.tabs li').click(function() {
+  showSelectedTab($(this));
+});
+```
+#### Keyboard Management
+According to W3C, keyboard interaction for tab panels should work as follows:
+For the tab list:
+- **Tab**: When the tab list is receiving focus, places focus on the active tab element. When the tab list contains the focus, moves focus to the next element in the page tab sequence outside the tablist, which is typically either the first focusable element inside the tab panel or the tab panel itself.
+When focus is on a tab element in a horizontal tab list:
+- **Left Arrow**: moves focus to the previous tab. If focus is on the first tab, moves focus to the last tab. Optionally, activates the newly focused tab (See note below).
+- **Right Arrow**: Moves focus to the next tab. If focus is on the last tab element, moves focus to the first tab. Optionally, activates the newly focused tab (See note below).
+
+Example jQuery
+```javaScript
+$('ul.tabs li').keydown(function(e) {
+  var $tab = $(this);
+  var $selectedTab = null;
+  var $firstTab = $tab.parent().children().first();
+  var $lastTab = $tab.parent().children().last();
+
+  if (e.which === 37) {
+    if ($tab.is($firstTab)) {
+      $selectedTab = $lastTab;
+    } else {
+      $selectedTab = $tab.prev();
+    }
+  } else if (e.which === 39) {
+    if ($tab.is($lastTab)) {
+      $selectedTab = $firstTab;
+    } else {
+      $selectedTab = $tab.next();
+    }
+  }
+  
+  $selectedTab.focus();
+  showSelectedTab($selectedTab);
+});
+```
 
 ### Forms
 #### Labels
