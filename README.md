@@ -71,12 +71,12 @@ Summary of requirements for tab panels:
 #### Example HTML
 ```
 <div class="tabpanel">
-  <ul class="tabs selected" role="tablist">
-    <li class="tab" id="tab1" role="tab" aria-controls="tabpanel1" aria-selected="true">Tab 1</li>
+  <ul class="tabs" role="tablist">
+    <li class="tab selected" id="tab1" role="tab" aria-controls="tabpanel1" aria-selected="true">Tab 1</li>
     <li class="tab" id="tab2" role="tab" aria-controls="tabpanel2" aria-selected="false">Tab 2</li>
     <li class="tab" id="tab3" role="tab" aria-controls="tabpanel3" aria-selected="false">Tab 3</li>
   </ul>
-  <div class="tabpanel" id="tabpanel1" aria-labelledby="tab1" aria-hidden="false">
+  <div class="tabpanel selected" id="tabpanel1" aria-labelledby="tab1" aria-hidden="false">
     <p>Content</p>
   </div>
   <div class="tabpanel" id="tabpanel2" aria-labelledby="tab2" aria-hidden="true">
