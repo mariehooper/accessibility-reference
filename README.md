@@ -11,7 +11,7 @@ Reference Guide for Making Web Applications More Accessible
   - [Tab Panels](#tab-panels)
   - [Forms](#forms)
   - [Focus Management](#focus-management)
-  - [Adding Skip Links](#adding-skip-links)
+  - [Skip Links](#skip-links)
 - [Tools for Reviewing Accessibility](#tools-for-reviewing-accessibility)
 - [Resources for Learning More](#resources-for-learning-more)
 
@@ -52,7 +52,45 @@ Widget roles - use these
 ## Practical Examples
 
 ### Accordions
+[WAI-ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/#accordion)
+#### Summary of requirements for accordions:
+- Each accordion header is contained in an element with role `button`. The button label is the label for the associated accordion panel.
+- Each accordion header button is wrapped in an element with role `heading` that has a value set for `aria-level` that is appropriate for the information architecture of the page. If the native host language has an element with an implicit heading and aria-level, such as an HTML heading tag, a native host language element may be used. - The button element is the only element inside the heading element. That is, if there are other visually persistent elements, they are not included inside the heading element.
+- If the accordion panel associated with an accordion header is visible, the **header button** element has `aria-expanded` set to `true`. If the panel is not visible, `aria-expanded` is set to `false`.
+- The accordion header button element has `aria-controls` set to the ID of the element containing the accordion panel content.
+- If the accordion panel associated with an accordion header is visible, and if the accordion does not permit the panel to be collapsed, the header button element has `aria-disabled` set to `true`.
 
+#### Example HTML
+```html
+<div class="accordion">
+  <div class="accordion-heading">
+    <a role="button" href="#" aria-controls="section1" aria-expanded="true">Meats</a>
+  </div>
+  <div class="accordion-section" id="section1">
+    <fieldset>
+      <input type="checkbox" name="meat" value="pepperoni" id="meat-opt-1">
+      <label for="meat-opt-1">Pepperoni</label>
+      <input type="checkbox" name="meat" value="ham" id="meat-opt-2">
+      <label for="meat-opt-2">Ham</label>
+      <input type="checkbox" name="meat" value="sausage" id="meat-opt-3">
+      <label for="meat-opt-3">Sausage</label>
+    </fieldset>
+  </div>
+  <div class="accordion-heading">
+    <a role="button" href="#" aria-controls="section2" aria-expanded="false">Vegetables</a>
+  </div>
+  <div class="accordion-section" id="section2">
+    <fieldset>
+      <input type="checkbox" name="veg" value="black olives" id="veg-opt-1">
+      <label for="veg-opt-1">Black Olives</label>
+      <input type="checkbox" name="veg" value="banana peppers" id="veg-opt-2">
+      <label for="veg-opt-2">Banana Peppers</label>
+      <input type="checkbox" name="veg" value="onions" id="veg-opt-3">
+      <label for="veg-opt-3">Onions</label>
+    </fieldset>
+  </div>
+</div>
+```
 
 ### Tab Panels
 [WAI-ARIA Authoring Practices](https://www.w3.org/TR/wai-aria-practices-1.1/#tabpanel)
@@ -133,7 +171,7 @@ $('ul.tabs li').keydown(function(e) {
       $selectedTab = $tab.next();
     }
   }
-  
+
   $selectedTab.focus();
   showSelectedTab($selectedTab);
 });
@@ -173,13 +211,46 @@ Make sure that keyboard and screen reader users are able to keep up as new items
 - Style the focus outline by targeting [tabindex=”-1”] - this will remove the outline when I am clicking around the screen.
 - You’ll still need to add tabindex="-1" (and remove the focus outline) to your named anchor targets.
 
-### Adding Skip Links
-Skip links are invisible anchors which can only be reached via the keyboard.
-How to implement these:
-- Add ul - with links like `#main` to get to main content and `#footer` to get to global footer (make sure these elements have matching IDs) and add `tabindex="-1"` so that focus is sent to appropriate area.
-- Set ul `position: absolute`
-- For anchors inside, `display: block`, `position: absolute` and `left: -99999px`, add padding, `background-color: white`
-- Make visible on focus with pseudo element: `ul.skip-links a:focus {left: 0}`
+### Skip Links
+[WebAIM: Skip Navigation Links](http://webaim.org/techniques/skipnav/) <br>
+Skip links are invisible anchors which can only be reached via the keyboard. They allow users to skip over main navigation elements easily while using AT.
+
+#### How to implement these:
+- Insert a link at the top of the page so that it is the first or one of the first things that is focusable.
+- Give the main content (ideally a `main` element) an ID that can be targeted by the link you created.
+- Update your skip link's href to match the ID of the main element.
+- Style your skip link so that it hides offscreen until focused by a keyboard user.
+
+#### Example HTML
+```HTML
+<body>
+  <a href="#maincontent" class="skip-to-content">Skip to main content</a>
+  <main id="maincontent">
+```
+
+#### Example SCSS
+```SCSS
+.skip-to-content a {
+  padding: 6px
+  position: absolute
+  top: -40px
+  left: 0px
+  color: $color-white
+  border-right: 1px solid $color-white
+  border-bottom: 1px solid $color-white
+  border-bottom-right-radius: 8px
+  background: transparent
+  transition: top 1s ease-out, background 1s linear
+  z-index: 100
+  &:focus {
+    top: 0px
+    background: $color-red-1
+    outline: 0
+    -webkit-transition: top .1s ease-in, background .5s linear
+    transition: top .1s ease-in, background .5s linear
+  }
+}
+```
 
 ## Tools for Reviewing Accessibility
 - [Accessibility Developer Tools Chrome Extension](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en)
@@ -201,3 +272,5 @@ How to implement these:
 ### Websites
 - [WebAIM](http://webaim.org/intro/)
 - [Web Accessibility Resources from Marcy Sutton](https://marcysutton.com/web-accessibility-resources/)
+- [Simply Accessible Articles](http://simplyaccessible.com/articles/)
+- [Accessibility Weekly by David A. Kennedy](http://a11yweekly.com/)
