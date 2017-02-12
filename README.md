@@ -2,19 +2,43 @@
 Reference Guide for Making Web Applications More Accessible
 
 ## Table of Contents
+- [What is Accessibility](#what-is-accessibility)
+- [WAI-ARIA](#wai-aria)
 - [Common Accessibility Patterns](#common-accessibility-patterns)
 - [Semantic Structure](#semantic-structure)
 - [Buttons vs. Links](#buttons-vs-links)
-- [ARIA](#aria)
 - [Practical Examples](#practical-examples)
   - [Accordions](#accordions)
   - [Tab Panels](#tab-panels)
   - [Forms](#forms)
   - [Focus Management](#focus-management)
   - [Skip Links](#skip-links)
+  - [Tooltips](#tooltips)
 - [Tools for Reviewing Accessibility](#tools-for-reviewing-accessibility)
 - [Resources for Learning More](#resources-for-learning-more)
 
+
+## What is Accessibility?
+MDN put together a [really nice intro to accessibility](https://developer.mozilla.org/en-US/docs/Learn/Accessibility/What_is_accessibility) as part of their 'Learn Web Development' content.
+
+The basic gist:
+- Consider accessibility from the start of a project, and test early and often. Just like any other bug, an accessibility problem becomes more expensive to fix the later it is discovered.
+- Bear in mind that a lot of accessibility best practices benefit everyone, not just users with disabilities. For example, lean semantic markup is not only good for screen readers, it is also fast to load and performant, so better for everyone, especially those on mobile devices, and/or slow connections.
+- Publish an accessibility statement on your site and engage with people having problems.
+
+## WAI-ARIA
+[WAI-ARIA](https://www.w3.org/TR/wai-aria-1.1/) (Web Accessibility Initiative - Accessible Rich Internet Applications) is a spec written by the W3C, defining a set of HTML attributes that can approve accessibility wherever it is lacking. Using semantic HTML will provide a lot of features needed for screen reader usage. ARIA should be a fallback or addition. ARIA is not changing keyboard tab order, removing from DOM, or doing anything besides including information for screen readers.
+
+### There are 3 main features defined:
+1. **Roles**: define what an element is or does
+  - Abstract roles: used for the ontology, don’t use directly
+  - Widget roles: act as standalone user interface widgets or as part of larger, composite widgets
+    - Composite widget roles: have requirements for roles on groups of elements
+  - Document structure roles: describe structures that organize content in a page
+  - Landmark roles: regions of the page intended as navigational landmarks
+  - Live region roles: may be modified by live region attributes
+2. **Properties**: used to give elements extra meaning or semantics
+3. **States**: Special properties that define the current conditions of elements
 
 ## Common Accessibility Patterns
 Accessibility best practices that apply to web apps in general from [Angular Accessibility Developer Guide](https://docs.angularjs.org/guide/accessibility)
@@ -27,6 +51,44 @@ Accessibility best practices that apply to web apps in general from [Angular Acc
 
 
 ## Semantic Structure
+Creating an accessible web application starts with using semantic HTML Structure. HTML5 allows developers to create layouts with sectioning elements that are more appropriate for their content rather than simply relying on nested `<div>` elements.
+
+Although you can make almost any HTML element behave like you want with CSS and JavaScript, using the correct element for the job often comes with things like built-in keyboard accessibility and additional functionality.
+
+### Other benefits to semantic HTML are:
+- Better SEO
+- Better mobile performance
+- Markup that is more easily understood
+
+### Meaningful text labels
+Make sure that your button and link text labels are understandable and distinctive. Don't just use "Click here" for your labels, as screenreader users sometimes get up a list of buttons and form controls.
+
+### Text alternatives
+Images and other non-text content are able to be described to non-sighted users in several different ways:
+
+```HTML
+<img src="dinosaur.png">
+
+<img src="dinosaur.png"
+     alt="A red Tyrannosaurus Rex: A two legged dinosaur standing upright like a human, with small arms, and a large head with lots of sharp teeth.">
+
+<img src="dinosaur.png"
+     alt="A red Tyrannosaurus Rex: A two legged dinosaur standing upright like a human, with small arms, and a large head with lots of sharp teeth."
+     title="The Mozilla red dinosaur">
+
+
+<img src="dinosaur.png" aria-labelledby="dino-label">
+
+<p id="dino-label">The Mozilla red Tyrannosaurus Rex: A two legged dinosaur standing upright like a human, with small arms, and a large head with lots of sharp teeth.</p>
+```
+### Takeaways:
+- File names are read aloud by screen readers if alt text is not available, so it is important to use meaningful naming.
+- The `alt` attribute should always contain descriptive information of what the image looks like visually.
+- `aria-labelledby` is especially useful if you plan to use the same text as the description for multiple images.
+
+### Accessible data tables
+Screen readers are unable to associate columns and rows together as groupings of data. To accomplish this, it is important to use `<th>` to define table headers and `<scope>` to specify whether they are for columns or rows. Use the `<caption>` attribute to give a screen reader a quick summary of the table's contents.
+
 - Web developer extension for Firefox shows document outline (Web developer > Information > view document outline)
 - Rule of thumb for H1 - only one per page and should be most important info for page
 - Landmarks - regions of webpage to provide hooks for screen readers to jump around page
@@ -39,15 +101,6 @@ Accessibility best practices that apply to web apps in general from [Angular Acc
 
 Warning: Be careful when marking up links with the button role. Buttons are expected to be triggered using the Space key, while links are expected to be triggered through the Enter key. In other words, when links are used to behave like buttons, adding `role="button"` alone is not sufficient. It will also be necessary to add a key event handler that listens for the Space key in order to be consistent with native buttons.
 
-## ARIA
-ARIA (Accessible Rich Internet Applications) is not changing keyboard tab order, removing from DOM, anything besides including information for screen readers
-- Abstract roles - inheritance, don’t use directly
-Widget roles - use these
-- Composite widget roles - have requirements for roles on groups of elements
-- Document structure roles
-- Landmark roles
-- Global states and properties (e.g. aria-popup, aria-live, aria-expanded)
-- Use the native HTML tags first since they provide a lot of the features needed for screen reader usage without extra work- ARIA is a fallback/addition
 
 ## Practical Examples
 
@@ -251,6 +304,9 @@ Skip links are invisible anchors which can only be reached via the keyboard. The
   }
 }
 ```
+### Tooltips
+- The element that serves as the **tooltip container** has role `tooltip`.
+- The element that triggers the tooltip references the tooltip element with `aria-describedby`.
 
 ## Tools for Reviewing Accessibility
 - [Accessibility Developer Tools Chrome Extension](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en)
