@@ -4,14 +4,13 @@ Reference Guide for Making Web Applications More Accessible
 ## Table of Contents
 - [What is Accessibility](#what-is-accessibility)
 - [WAI-ARIA](#wai-aria)
-- [Common Accessibility Patterns](#common-accessibility-patterns)
 - [Semantic Structure](#semantic-structure)
-- [Buttons vs. Links](#buttons-vs-links)
+- [Focus Management](#focus-management)
+- [Additional HTML Considerations](addition-html-considerations)
 - [Practical Examples](#practical-examples)
   - [Accordions](#accordions)
   - [Tab Panels](#tab-panels)
   - [Forms](#forms)
-  - [Focus Management](#focus-management)
   - [Skip Links](#skip-links)
   - [Tooltips](#tooltips)
 - [Tools for Reviewing Accessibility](#tools-for-reviewing-accessibility)
@@ -40,30 +39,34 @@ The basic gist:
 2. **Properties**: used to give elements extra meaning or semantics
 3. **States**: Special properties that define the current conditions of elements
 
-## Common Accessibility Patterns
-Accessibility best practices that apply to web apps in general from [Angular Accessibility Developer Guide](https://docs.angularjs.org/guide/accessibility)
-- **Text alternatives:** Add alternate text content to make visual information accessible using [these W3C guidelines](https://www.w3.org/TR/html-alt-techniques/). The appropriate technique depends on the specific markup but can be accomplished using offscreen spans, `aria-label` or label elements, image `alt` attributes, `figure/figcaption` elements and more.
-- **HTML Semantics:** If you're creating custom element directives, Web Components or HTML in general, use native elements wherever possible to utilize built-in events and properties. Alternatively, use ARIA to communicate semantic meaning. [See notes on ARIA use](https://www.w3.org/TR/aria-in-html/#notes-on-aria-use-in-html).
-- **Focus management:** Guide the user around the app as views are appended/removed. Focus should never be lost, as this causes unexpected behavior and much confusion (referred to as "freak-out mode").
-- **Announcing changes:** When filtering or other UI messaging happens away from the user's focus, notify with [ARIA Live Regions](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions).
-- **Color contrast and scale:** Make sure content is legible and interactive controls are usable at all screen sizes. Consider configurable UI themes for people with color blindness, low vision or other visual impairments.
-- **Progressive enhancement:** Some users do not browse with JavaScript enabled or do not have the latest browser. An accessible message about site requirements can inform users and improve the experience.
-
 
 ## Semantic Structure
 Creating an accessible web application starts with using semantic HTML Structure. HTML5 allows developers to create layouts with sectioning elements that are more appropriate for their content rather than simply relying on nested `<div>` elements.
 
-Although you can make almost any HTML element behave like you want with CSS and JavaScript, using the correct element for the job often comes with things like built-in keyboard accessibility and additional functionality.
+Although you can make almost any HTML element behave like you want with CSS and JavaScript, using the correct element for the job often comes with things like built-in keyboard accessibility and additional functionality. Alternatively, use ARIA to communicate semantic meaning. [See notes on ARIA use](https://www.w3.org/TR/aria-in-html/#notes-on-aria-use-in-html).
 
 ### Other benefits to semantic HTML are:
 - Better SEO
 - Better mobile performance
 - Markup that is more easily understood
 
+### Buttons vs. Links
+The use of the button element is one of the most common examples of non-semantic HTML in web applications. Many developers use links to recreate the look and feel of a button, and it can be difficult to determine which is the correct element in some cases. A good rule of thumb is when a link needs an href of "#", it _should_ probably be a button.
+
+Native buttons come with the inherent ability to be tabbed to and triggered with the space bar or enter key. If you are using links to behave like buttons, adding `role="button"` alone is not sufficient - it is also necessary to add a key event handler that listens for the space key to ensure that it remains consistent with native buttons.
+
+### More resources about buttons
+- [When to Use the Button Element](https://css-tricks.com/use-button-element/)
+- [MDN Using the Button Role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role)
+- [Anchors, Buttons, and Accessibility by Forimidable Labs](https://formidable.com/blog/2014/05/08/anchors-buttons-and-accessibility/)
+
+
 ### Meaningful text labels
 Make sure that your button and link text labels are understandable and distinctive. Don't just use "Click here" for your labels, as screenreader users sometimes get up a list of buttons and form controls.
 
 ### Text alternatives
+Add alternate text content to make visual information accessible using [these W3C guidelines](https://www.w3.org/TR/html-alt-techniques/). The appropriate technique depends on the specific markup but can be accomplished using offscreen spans, `aria-label` or label elements, image `alt` attributes, `figure/figcaption` elements and more.
+
 Images and other non-text content are able to be described to non-sighted users in several different ways:
 
 ```HTML
@@ -94,13 +97,27 @@ Screen readers are unable to associate columns and rows together as groupings of
 - Landmarks - regions of webpage to provide hooks for screen readers to jump around page
 - Role of search and role of navigation allow elements to become landmarks
 
+### Focus Management
+Make sure that keyboard and screen reader users are able to keep up as new items appear or are removed from the page.
 
-## Buttons vs. Links
-- [When to Use the Button Element](https://css-tricks.com/use-button-element/)
-- [MDN Using the Button Role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role)
+#### More resources about focus management
+- [Remove Headaches from Focus Management](https://developers.google.com/web/updates/2016/03/focus-start-point)
+- [Learning to Focus()](https://www.sitepoint.com/learning-to-focus/)
+- [Keyboard Navigable JavaScript Widgets](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets)
 
-Warning: Be careful when marking up links with the button role. Buttons are expected to be triggered using the Space key, while links are expected to be triggered through the Enter key. In other words, when links are used to behave like buttons, adding `role="button"` alone is not sufficient. It will also be necessary to add a key event handler that listens for the Space key in order to be consistent with native buttons.
+#### Announcing changes
+When filtering or other UI messaging happens away from the user's focus, notify with [ARIA Live Regions](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions).
 
+- Example - delete button is focused and pressed and then focus drops
+- In JS - find remaining list item that has focusable delete button ( ex: add something like listItems.find(‘.btn-delete’).first().focus(); to the end of your button function)
+- Also make user aware that item is being deleted - look at aria-live regions. By sending focus to next item, we are letting them know this.
+- Style the focus outline by targeting [tabindex=”-1”] - this will remove the outline when I am clicking around the screen.
+- You’ll still need to add tabindex="-1" (and remove the focus outline) to your named anchor targets.
+
+## Additional HTML Considerations
+**Color contrast and scale:** Make sure content is legible and interactive controls are usable at all screen sizes. Consider configurable UI themes for people with color blindness, low vision or other visual impairments.
+
+**Progressive enhancement:** Some users do not browse with JavaScript enabled or do not have the latest browser. An accessible message about site requirements can inform users and improve the experience.
 
 ## Practical Examples
 
@@ -251,18 +268,6 @@ $('ul.tabs li').keydown(function(e) {
 
 `Aria-invalid` and `aria-describedby` can be used together to indicate an error in a form field
 
-### Focus Management
-- [Remove Headaches from Focus Management](https://developers.google.com/web/updates/2016/03/focus-start-point)
-- [Learning to Focus()](https://www.sitepoint.com/learning-to-focus/)
-- [Keyboard Navigable JavaScript Widgets](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Keyboard-navigable_JavaScript_widgets)
-
-Make sure that keyboard and screen reader users are able to keep up as new items appear or are removed from the page
-
-- Example - delete button is focused and pressed and then focus drops
-- In JS - find remaining list item that has focusable delete button ( ex: add something like listItems.find(‘.btn-delete’).first().focus(); to the end of your button function)
-- Also make user aware that item is being deleted - look at aria-live regions. By sending focus to next item, we are letting them know this.
-- Style the focus outline by targeting [tabindex=”-1”] - this will remove the outline when I am clicking around the screen.
-- You’ll still need to add tabindex="-1" (and remove the focus outline) to your named anchor targets.
 
 ### Skip Links
 [WebAIM: Skip Navigation Links](http://webaim.org/techniques/skipnav/) <br>
@@ -330,3 +335,4 @@ Skip links are invisible anchors which can only be reached via the keyboard. The
 - [Web Accessibility Resources from Marcy Sutton](https://marcysutton.com/web-accessibility-resources/)
 - [Simply Accessible Articles](http://simplyaccessible.com/articles/)
 - [Accessibility Weekly by David A. Kennedy](http://a11yweekly.com/)
+- [Angular Accessibility Developer Guide](https://docs.angularjs.org/guide/accessibility)
