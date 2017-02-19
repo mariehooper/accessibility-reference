@@ -6,7 +6,7 @@ Reference Guide for Making Web Applications More Accessible
 - [WAI-ARIA](#wai-aria)
 - [Semantic Structure](#semantic-structure)
 - [Focus Management](#focus-management)
-- [Additional HTML Considerations](additional-html-considerations)
+- [Additional HTML Considerations](#additional-html-considerations)
 - [Practical Examples](#practical-examples)
   - [Accordions](#accordions)
   - [Tab Panels](#tab-panels)
